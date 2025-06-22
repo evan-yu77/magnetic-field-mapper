@@ -86,6 +86,7 @@ void loop() {
 
     float intensityMuTesla = (magneticIntensity / sens) * 100.0;
 
+      // set field values
       ThingSpeak.setField(1, x);
       ThingSpeak.setField(2, y);
       ThingSpeak.setField(3, z);
@@ -93,7 +94,7 @@ void loop() {
       ThingSpeak.setField(5, xpos);
       ThingSpeak.setField(6, ypos);
 
-
+    // communicate with ThingSpeak API
     httpResponseCode = ThingSpeak.writeFields(channelID, writeapi_key);
     
     if (httpResponseCode == 200) {
