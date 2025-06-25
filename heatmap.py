@@ -4,33 +4,41 @@
 import pandas as pd 
 import matplotlib.pyplot as plt 
 import numpy as np 
+from matplotlib.animation import FuncAnimation
 
-# read csv file 
 
-df = pd.read_csv("C:\\Users\\evany\\Documents\\Arduino\\code_for_magnetometer\\data.csv", usecols=['field5', 'field6','field4'])
+# FuncAnimation updates frame by frame, so frame is a required parameter
+def heatmap_plot(frame):
+    df = pd.read_csv("https://api.thingspeak.com/channels/2986043/feeds.csv?api_key=97HNBX83QIQ34OIJ", usecols=['field5', 'field6','field4'])
 
-df.columns = ['Intensity', 'LocX', 'LocY']
-cols = df.columns
+    df.columns = ['Intensity', 'LocX', 'LocY']
+    heatmapData = pd.pivot_table(df, index='LocY', columns='LocX', values='Intensity')
 
-heatmapData = pd.pivot_table(df, index='LocY', columns='LocX', values='Intensity')
+    plt.clf()
 
-fig, axes = plt.subplots() 
-img = axes.imshow(heatmapData)
+    img = plt.imshow(heatmapData, cmap='viridis')
+    plt.xlabel('X Location')
+    plt.ylabel('Y Location')
+    plt.title("Intensity of Magnetic Field in different locations around room")
+    ticklabels = ['-1', '0', '1']
 
-ticklabels = ['-1', '0', '1']
-axes.set_xticks(range(len(cols[1])-1), labels=ticklabels)
-axes.set_yticks(range(len(cols[2])-1), labels=ticklabels)
+    # set x ticks and y ticks 
+    plt.xticks(range(len(heatmapData[1])), labels=ticklabels)
+    plt.yticks(range(len(heatmapData[1])), labels=ticklabels)
 
-# r for rows, c for columns 
-for r in range(heatmapData.shape[0]):
-    for c in range(heatmapData.shape[1]):
-        vals = heatmapData.iloc[r, c]
-        text_vals = f"{vals:.2f}"
-        axes.text(c, r, text_vals, ha="center", va="center", color='w')
+    # r for rows, c for columns. index by rows and columsn to enter magnetic field data manually
+    for r in range(heatmapData.shape[0]):
+        for c in range(heatmapData.shape[1]):
 
-plt.xlabel('X Location')
-plt.ylabel('Y Location')
-axes.set_title("Intensity of Magnetic Field in different locations around room")
+            # access rows and columns via iloc() function
+            vals = heatmapData.iloc[r, c]
+            text_vals = f"{vals:.3f}"
+            plt.text(c, r, text_vals, ha="center", va="center", color='w')
+
+fig, axes = plt.subplots()
+
+# updates every 3 seconds
+anim = FuncAnimation(fig, heatmap_plot, interval=3000)
 
 plt.show()
 
