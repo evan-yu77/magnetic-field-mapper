@@ -7,12 +7,12 @@
 #include <WiFi.h>
 #include <ThingSpeak.h>
 
-const char *readapi_key = "97HNBX83QIQ34OIJ";
-const char *writeapi_key = "6XUT2VL5DAKTEVLS";
-const char *ssid = "TELUSWiFi2555";
-const char *pass = "CGe6dpt4YM";
+const char *readapi_key = "XXXXXXXXXXXX";
+const char *writeapi_key = "XXXXXXXXXX";
+const char *ssid = "XXXXXXXXXXXXXXXXX";
+const char *pass = "XXXXXXXXXXXXXXXX";
 const char *server = "api.thingspeak.com";
-unsigned long channelID = 2986043;
+unsigned long channelID = XXXXXXXX;
 int httpResponseCode = 0;
 
 unsigned long updateTime = 0;
